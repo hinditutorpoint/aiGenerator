@@ -9,7 +9,7 @@
  * limits. Never pass API keys or bearer tokens through `apiHeaders`; use
  * session-based auth (cookies) only.
  *
- * @version 2.0.0
+ * @version 4.1.0
  */
 (function ($, window, document) {
     'use strict';

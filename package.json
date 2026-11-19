@@ -1,6 +1,6 @@
 {
   "name": "ai-description-generator",
-  "version": "2.0.0",
+  "version": "4.1.0",
   "description": "Production-ready jQuery AI content generator plugin with speech-to-text, CSRF safety, and modal support.",
   "main": "js/ai-description-generator.js",
   "unpkg": "js/ai.description.generator.min.js",
@@ -33,7 +33,7 @@
     "llm",
     "forms"
   ],
-  "author": "HindiTutorPoint",
+  "author": "hinditutorpoint",
   "license": "MIT",
   "peerDependencies": {
     "jquery": ">=3.0.0"
