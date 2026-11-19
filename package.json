@@ -1,0 +1,53 @@
+{
+  "name": "ai-description-generator",
+  "version": "2.0.0",
+  "description": "Production-ready jQuery AI content generator plugin with speech-to-text, CSRF safety, and modal support.",
+  "main": "js/ai-description-generator.js",
+  "unpkg": "js/ai.description.generator.min.js",
+  "jsdelivr": "js/ai.description.generator.min.js",
+  "style": "css/ai-description-generator.css",
+  "files": [
+    "js/",
+    "css/",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build:js": "terser js/ai-description-generator.js -c -m -o js/ai.description.generator.min.js",
+    "build:css": "clean-css-cli -o css/ai.description.generator.min.css css/ai-description-generator.css",
+    "build": "npm run build:js && npm run build:css",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "jquery",
+    "jquery-plugin",
+    "ai",
+    "content-generator",
+    "description-generator",
+    "speech-recognition",
+    "voice-to-text",
+    "openai",
+    "gemini",
+    "claude",
+    "llm",
+    "forms"
+  ],
+  "author": "HindiTutorPoint",
+  "license": "MIT",
+  "peerDependencies": {
+    "jquery": ">=3.0.0"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.39.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hinditutorpoint/aiGenerator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hinditutorpoint/aiGenerator/issues"
+  },
+  "homepage": "https://github.com/hinditutorpoint/aiGenerator#readme"
+}

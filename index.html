@@ -3,571 +3,921 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Description Generator - Documentation</title>
-    <!-- Bootstrap 5 CSS -->
-    <link rel="stylesheet" type="text/css" href="css/ai.description.generator.min.css">
+    <title>AI Description Generator</title>
+
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Highlight.js for code syntax -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    
+    <!-- AI Generator Plugin CSS -->
+    <link rel="stylesheet" type="text/css" href="css/ai-description-generator.css">
+
     <style>
         :root {
-            --primary-color: #3b82f6;
-            --secondary-color: #64748b;
-            --dark-color: #1e293b;
-            --light-color: #f8fafc;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-soft: rgba(79, 70, 229, 0.08);
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --surface: #ffffff;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            --shadow-float: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
         }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--dark-color);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--slate-800);
+            background-color: #fafbfc;
+            line-height: 1.65;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        .navbar {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        h1, h2, h3, h4, h5, h6, .brand-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--dark);
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
-        
-        .sidebar {
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.86rem;
+        }
+
+        /* --- Navbar --- */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 0.85rem 0;
+            transition: all 0.2s ease;
+        }
+        .navbar-brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .navbar-brand-badge img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+        }
+        .nav-link-custom {
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.92rem;
+            padding: 0.5rem 0.9rem !important;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+        }
+        .nav-link-custom:hover {
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar-wrapper {
             position: sticky;
-            top: 20px;
-            height: calc(100vh - 40px);
+            top: 85px;
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
+            padding-right: 0.5rem;
+            scrollbar-width: thin;
         }
-        
-        .sidebar .nav-link {
-            color: var(--secondary-color);
-            border-left: 3px solid transparent;
-            padding: 0.5rem 1rem;
+        .sidebar-heading {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--slate-500);
+            font-weight: 700;
+            margin: 1rem 0 0.4rem 0.75rem;
         }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-            background-color: rgba(59, 130, 246, 0.05);
+        .sidebar-menu .nav-link {
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.88rem;
+            padding: 0.48rem 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s ease;
         }
-        
-        .card {
-            border: none;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            margin-bottom: 2rem;
-            border-radius: 0.5rem;
+        .sidebar-menu .nav-link:hover {
+            color: var(--primary);
+            background: var(--primary-soft);
         }
-        
-        .card-header {
-            background-color: white;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .sidebar-menu .nav-link.active {
+            color: var(--primary);
+            background: #ede9fe;
             font-weight: 600;
         }
-        
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--primary-color);
-            border-radius: 50%;
+
+        /* --- Hero Section --- */
+        .hero-banner {
+            position: relative;
+            background: radial-gradient(120% 120% at 50% 0%, #f5f3ff 0%, #ffffff 80%);
+            border: 1px solid #e0e7ff;
+            border-radius: var(--radius-xl);
+            padding: 3rem 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-subtle);
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ede9fe;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        .hero-title {
+            font-size: 2.35rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--slate-600);
+            max-width: 600px;
+            margin-bottom: 1.75rem;
+        }
+
+        /* --- Cards & Containers --- */
+        .doc-card {
+            background: var(--surface);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 2.25rem;
+            box-shadow: var(--shadow-card);
+        }
+        .doc-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--slate-100);
+            padding-bottom: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .doc-card-title {
+            font-size: 1.2rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .doc-card-title i {
+            color: var(--primary);
+        }
+
+        /* --- Feature Tiles --- */
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            height: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+            border-color: #cbd5e1;
+        }
+        .feature-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--primary-soft);
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
+            font-size: 1.2rem;
+            margin-bottom: 0.85rem;
         }
-        
-        .demo-textarea {
-            min-height: 120px;
+
+        /* --- Code Block Wrapper --- */
+        .code-window {
+            background: #282c34;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-top: 1rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
         }
-        
-        .example-container {
-            background-color: #f8f9fa;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+        .code-header {
+            background: #21252b;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: #9da5b4;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        
-        .badge-primary {
-            background-color: var(--primary-color);
+        .code-dots {
+            display: flex;
+            gap: 6px;
         }
-        
-        pre {
-            border-radius: 0.5rem;
-            padding: 1rem !important;
-            background-color: #f8f9fa !important;
+        .code-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #5c6370;
         }
-        
-        .tab-content {
-            padding: 1.5rem 0;
+        .code-dot.red { background: #e06c75; }
+        .code-dot.yellow { background: #e5c07b; }
+        .code-dot.green { background: #98c379; }
+        .code-window pre {
+            margin: 0;
+            padding: 1.1rem !important;
+            background: transparent !important;
         }
-        
-        .nav-tabs .nav-link {
-            color: var(--secondary-color);
-            border: none;
-            padding: 0.75rem 1.5rem;
+
+        /* --- Tables --- */
+        .api-table-wrapper {
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            overflow: hidden;
         }
-        
-        .nav-tabs .nav-link.active {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            background-color: transparent;
+        .api-table {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        .api-table th {
+            background: #f8fafc;
+            color: var(--slate-700);
             font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--slate-200);
         }
-        
-        .hero-section {
-            background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
-            border-radius: 0.5rem;
-            padding: 3rem 2rem;
-            margin-bottom: 3rem;
+        .api-table td {
+            padding: 0.9rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
         }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+        .api-table code {
+            color: #db2777;
+            background: #fdf2f8;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
-        
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
+
+        /* --- Method Signature Badges --- */
+        .badge-method {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
         }
-        
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-            color: white;
+        .badge-method.post { background: #dcfce7; color: #15803d; }
+        .badge-method.get  { background: #dbeafe; color: #1d4ed8; }
+        .badge-method.js   { background: #fef3c7; color: #b45309; }
+
+        /* --- Interactive Demo Area --- */
+        .demo-sandbox {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .demo-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--slate-700);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* --- Buttons --- */
+        .btn-brand {
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.55rem 1.25rem;
+            border: 1px solid var(--primary);
+            transition: all 0.15s ease;
+        }
+        .btn-brand:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+        .btn-outline-brand {
+            background: transparent;
+            color: var(--primary);
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.55rem 1.25rem;
+            border: 1px solid var(--primary);
+            transition: all 0.15s ease;
+        }
+        .btn-outline-brand:hover {
+            background: var(--primary-soft);
+            color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* --- Footer --- */
+        .footer-custom {
+            border-top: 1px solid var(--slate-200);
+            background: #ffffff;
+            padding: 2.5rem 0;
+            color: var(--slate-500);
+            font-size: 0.88rem;
+        }
+
+        /* Smooth Anchor Scroll Offset */
+        section {
+            scroll-margin-top: 90px;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 991.98px) {
+            .hero-title { font-size: 1.85rem; }
+            .hero-banner { padding: 2rem 1.5rem; }
+            .sidebar-wrapper { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-robot me-2 text-primary"></i> AI Description Generator
+            <a class="navbar-brand-badge" href="#">
+                <img src="assets/ai-description.svg" alt="AI Generator Logo" onerror="this.src='thumbnail.png'">
+                <span class="brand-font fs-5 text-dark">AI Description <span class="text-primary">Pro</span></span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#getting-started">Getting Started</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#examples">Examples</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#configuration">Configuration</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#api">API</a>
-                    </li>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
+                    <li class="nav-item"><a class="nav-link-custom" href="#overview">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="#installation">Install</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="#examples">Examples</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="#options">Options</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="#methods">Methods</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="#api-spec">API Spec</a></li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-primary" href="#try-it">Try It</a>
+                        <a class="btn btn-brand btn-sm" href="#try-it">
+                            <i class="fas fa-play me-1"></i> Live Sandbox
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container my-5">
+    <!-- Main Container -->
+    <div class="container my-4 my-lg-5">
         <div class="row">
-            <!-- Sidebar -->
+            
+            <!-- Sticky Sidebar (Desktop) -->
             <div class="col-lg-3 d-none d-lg-block">
-                <div class="sidebar">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#overview">Overview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#installation">Installation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#basic-usage">Basic Usage</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#advanced-usage">Advanced Usage</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#options">Options</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#methods">Methods</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#events">Events</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#examples">Examples</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#faq">FAQ</a>
-                        </li>
-                    </ul>
+                <div class="sidebar-wrapper">
+                    <div class="sidebar-heading">Quick Jump</div>
+                    <nav class="sidebar-menu nav flex-column">
+                        <a class="nav-link" href="#overview"><i class="fas fa-compass fa-fw text-secondary"></i> Overview</a>
+                        <a class="nav-link" href="#features"><i class="fas fa-bolt fa-fw text-secondary"></i> Key Capabilities</a>
+                        <a class="nav-link" href="#installation"><i class="fas fa-download fa-fw text-secondary"></i> Installation</a>
+                        <a class="nav-link" href="#basic-usage"><i class="fas fa-code fa-fw text-secondary"></i> Basic Usage</a>
+                        <a class="nav-link" href="#advanced-usage"><i class="fas fa-sliders-h fa-fw text-secondary"></i> Advanced Usage</a>
+                        <a class="nav-link" href="#examples"><i class="fas fa-laptop-code fa-fw text-secondary"></i> Live Examples</a>
+                        <a class="nav-link" href="#options"><i class="fas fa-table fa-fw text-secondary"></i> Config Options</a>
+                        <a class="nav-link" href="#methods"><i class="fas fa-terminal fa-fw text-secondary"></i> JS Methods</a>
+                        <a class="nav-link" href="#events"><i class="fas fa-bell fa-fw text-secondary"></i> Events</a>
+                        <a class="nav-link" href="#api-spec"><i class="fas fa-server fa-fw text-secondary"></i> Backend API Spec</a>
+                        <a class="nav-link" href="#try-it"><i class="fas fa-vial fa-fw text-secondary"></i> Interactive Demo</a>
+                        <a class="nav-link" href="#faq"><i class="fas fa-question-circle fa-fw text-secondary"></i> FAQ</a>
+                    </nav>
                 </div>
             </div>
-            
-            <!-- Main Content -->
+
+            <!-- Content Column -->
             <div class="col-lg-9">
+
                 <!-- Hero Section -->
-                <section id="overview" class="hero-section mb-5">
-                    <div class="row align-items-center">
+                <section id="overview" class="hero-banner">
+                    <div class="row align-items-center g-4">
                         <div class="col-md-8">
-                            <h1 class="display-5 fw-bold mb-3">AI Description Generator</h1>
-                            <p class="lead mb-4">Enhance your forms with AI-powered content generation. Our plugin adds smart AI capabilities to any textarea with minimal setup.</p>
-                            <div class="d-flex gap-2">
-                                <a href="#getting-started" class="btn btn-primary btn-lg px-4">Get Started</a>
-                                <a href="#try-it" class="btn btn-outline-primary btn-lg px-4">Try Demo</a>
+                            <span class="hero-badge"><i class="fas fa-shield-alt"></i> Enterprise Production Ready v2.0</span>
+                            <h1 class="hero-title">Intelligent AI Content Generation For Any Textarea</h1>
+                            <p class="hero-desc">
+                                Seamlessly embed multi-modal text generation, speech recognition, and contextual prompt prefilling into any form or modal. Zero framework locks, fully CSP-safe, and resilient.
+                            </p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="#try-it" class="btn btn-brand">
+                                    <i class="fas fa-sparkles me-1"></i> Try Interactive Demo
+                                </a>
+                                <a href="#installation" class="btn btn-outline-brand">
+                                    <i class="fas fa-book-open me-1"></i> Read Documentation
+                                </a>
                             </div>
                         </div>
-                        <div class="col-md-4 d-none d-md-block">
-                            <img src="thumbnail.png" alt="AI Textarea Plugin" class="img-fluid rounded">
+                        <div class="col-md-4 text-center d-none d-md-block">
+                            <img src="assets/ai-description.svg" alt="AI Generator Icon" class="img-fluid" style="max-height: 160px; filter: drop-shadow(0 15px 25px rgba(79,70,229,0.2));" onerror="this.src='thumbnail.png'">
                         </div>
                     </div>
                 </section>
-                
-                <!-- Features -->
-                <section class="mb-5">
-                    <h2 class="mb-4">Key Features</h2>
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="d-flex">
-                                <div class="feature-icon">
-                                    <i class="fas fa-magic fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5>Smart Content Generation</h5>
-                                    <p>Generate high-quality content with AI based on your prompts and context.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex">
-                                <div class="feature-icon">
-                                    <i class="fas fa-microphone fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5>Voice Input</h5>
-                                    <p>Use voice commands to generate content with speech recognition.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex">
-                                <div class="feature-icon">
-                                    <i class="fas fa-cog fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5>Customizable</h5>
-                                    <p>Fine-tune generation with creativity levels and length controls.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex">
-                                <div class="feature-icon">
-                                    <i class="fas fa-layer-group fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5>Modal & Inline</h5>
-                                    <p>Works seamlessly in both modal and non-modal contexts.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Getting Started -->
-                <section id="getting-started" class="mb-5">
-                    <h2 class="mb-4">Getting Started</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            Installation
-                        </div>
-                        <div class="card-body">
-                            <p>Include the plugin after jQuery and Bootstrap 5:</p>
-                            <pre><code class="language-html">&lt;!-- jQuery --&gt;
-&lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
-&lt;!-- Bootstrap 5 --&gt;
+                <!-- Key Capabilities -->
+                <section id="features" class="mb-5">
+                    <h2 class="h4 mb-3">Core Production Features</h2>
+                    <div class="row g-3">
+                        <div class="col-sm-6 col-md-3">
+                            <div class="feature-card">
+                                <div class="feature-icon-box"><i class="fas fa-magic"></i></div>
+                                <h6 class="fw-bold mb-1">Context Aware</h6>
+                                <p class="text-muted small mb-0">Prefills selected text and automatically adapts inside Bootstrap modals.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="feature-card">
+                                <div class="feature-icon-box"><i class="fas fa-microphone"></i></div>
+                                <h6 class="fw-bold mb-1">Voice Recognition</h6>
+                                <p class="text-muted small mb-0">Real-time speech-to-text dictation mapped directly to active textareas.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="feature-card">
+                                <div class="feature-icon-box"><i class="fas fa-shield-virus"></i></div>
+                                <h6 class="fw-bold mb-1">CSP & XSS Safe</h6>
+                                <p class="text-muted small mb-0">Zero dynamic inline CSS, strict DOMPurify sanitization, and CSRF token binding.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="feature-card">
+                                <div class="feature-icon-box"><i class="fas fa-recycle"></i></div>
+                                <h6 class="fw-bold mb-1">Clean Lifecycle</h6>
+                                <p class="text-muted small mb-0">Granular per-textarea <code>destroy</code>, MutationObserver sync, and no memory leaks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Installation -->
+                <section id="installation" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-download"></i> Installation</h3>
+                        <span class="badge bg-light text-dark border">CDN / Local</span>
+                    </div>
+                    <p class="text-secondary small">
+                        Include the companion stylesheet <strong>before or after Bootstrap 5</strong>, and include the script after jQuery 3.x.
+                    </p>
+
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div></div>
+                            <span>HTML Header & Scripts</span>
+                        </div>
+                        <pre><code class="language-html">&lt;!-- 1. Stylesheets --&gt;
 &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
-&lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="css/ai-description-generator.css"&gt;
 
-&lt;!-- AI Description Generator Plugin --&gt;
-&lt;script src="path/to/ai-description-generator.js"&gt;&lt;/script&gt;</code></pre>
-                        </div>
+&lt;!-- 2. Dependencies (jQuery 3.x & DOMPurify for HTML mode) --&gt;
+&lt;script src="https://code.jquery.com/jquery-3.7.1.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 3. AI Generator Plugin --&gt;
+&lt;script src="js/ai-description-generator.js"&gt;&lt;/script&gt;</code></pre>
                     </div>
                 </section>
-                
+
                 <!-- Basic Usage -->
-                <section id="basic-usage" class="mb-5">
-                    <h2 class="mb-4">Basic Usage</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            Simple Implementation
-                        </div>
-                        <div class="card-body">
-                            <p>Add the <code>data-ai-generate</code> attribute to any textarea to enable AI generation:</p>
-                            <pre><code class="language-html">&lt;textarea data-ai-generate class="form-control" rows="5"&gt;&lt;/textarea&gt;</code></pre>
-                            
-                            <p class="mt-3">Or initialize via JavaScript:</p>
-                            <pre><code class="language-javascript">// Initialize on specific textarea
-$('#my-textarea').aiDescriptionGenerator();
+                <section id="basic-usage" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-code"></i> Basic Implementation</h3>
+                        <span class="badge bg-light text-primary border">Quick Start</span>
+                    </div>
+                    <p class="text-secondary small">
+                        Simply add the <code>data-ai-generate</code> attribute to any HTML textarea. The built-in MutationObserver automatically binds to present and dynamically inserted textareas.
+                    </p>
 
-// Initialize on all textareas with data-ai-generate attribute
-$(document).ready(function() {
-    $('textarea[data-ai-generate]').aiDescriptionGenerator();
-});</code></pre>
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div></div>
+                            <span>Declarative HTML Setup</span>
                         </div>
+                        <pre><code class="language-html">&lt;!-- Automatic declarative attachment --&gt;
+&lt;textarea data-ai-generate class="form-control" rows="4" placeholder="Type here..."&gt;&lt;/textarea&gt;</code></pre>
+                    </div>
+
+                    <p class="text-secondary small mt-3">Or programmatically initialize using the jQuery plugin syntax:</p>
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div></div>
+                            <span>JavaScript Initialization</span>
+                        </div>
+                        <pre><code class="language-javascript">// Target a specific textarea by selector
+$('#product-description').aiDescriptionGenerator();</code></pre>
                     </div>
                 </section>
-                
+
                 <!-- Advanced Usage -->
-                <section id="advanced-usage" class="mb-5">
-                    <h2 class="mb-4">Advanced Usage</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            Configuration Options
+                <section id="advanced-usage" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-sliders-h"></i> Advanced Attributes & Configuration</h3>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <h6 class="fw-bold"><i class="fas fa-microphone text-primary me-1"></i> Voice Recognition</h6>
+                                <p class="text-muted small mb-2">Enable Web Speech API dictation directly beside the generation icon.</p>
+                                <code>data-ai-voice="true"</code>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p>Customize the plugin with various options:</p>
-                            <pre><code class="language-javascript">AIGenerator.init({
-    apiEndpoint: '/custom-ai-endpoint',
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <h6 class="fw-bold"><i class="fas fa-file-code text-primary me-1"></i> Rich HTML Mode</h6>
+                                <p class="text-muted small mb-2">Request styled HTML generation. Sanitized automatically via DOMPurify.</p>
+                                <code>data-ai-response="html"</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-window mt-3">
+                        <div class="code-header">
+                            <div class="code-dots"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div></div>
+                            <span>Global Customization (AIGenerator.init)</span>
+                        </div>
+                        <pre><code class="language-javascript">AIGenerator.init({
+    apiEndpoint: '/api/v1/ai/generate',
+    defaultMaxTokens: 300,
+    defaultTemperature: 0.7,
+    cooldownMs: 2500, // anti-spam delay
     i18n: {
-        title: 'My AI Assistant',
-        generate: 'Create Content'
-    },
-    styles: {
-        modal: {
-            maxWidth: '800px'
-        }
-    },
-    prefill: {
-        enabled: true,
-        maxLength: 300
+        title: 'Smart Assistant',
+        generate: 'Create Content',
+        loadingText: 'Synthesizing with AI...'
     }
 });</code></pre>
+                    </div>
+                </section>
+
+                <!-- Live Examples -->
+                <section id="examples" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-laptop-code"></i> Live Interactive Examples</h3>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Ready to Test</span>
+                    </div>
+
+                    <!-- Example 1 -->
+                    <div class="mb-4">
+                        <div class="demo-label">
+                            <span>1. Standard AI Textarea</span>
+                            <span class="badge bg-light text-secondary">data-ai-generate</span>
+                        </div>
+                        <div class="demo-sandbox">
+                            <textarea data-ai-generate class="form-control" rows="3" placeholder="Click the bottom-right icon to prompt the AI generator..."></textarea>
                         </div>
                     </div>
-                    
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            Voice Input
+
+                    <!-- Example 2 -->
+                    <div class="mb-4">
+                        <div class="demo-label">
+                            <span>2. Voice Input + AI Generation</span>
+                            <span class="badge bg-light text-secondary">data-ai-voice="true"</span>
                         </div>
-                        <div class="card-body">
-                            <p>Enable voice input by adding the <code>data-ai-voice</code> attribute:</p>
-                            <pre><code class="language-html">&lt;textarea data-ai-generate data-ai-voice="true" class="form-control" rows="5"&gt;&lt;/textarea&gt;</code></pre>
+                        <div class="demo-sandbox">
+                            <textarea data-ai-generate data-ai-voice="true" class="form-control" rows="3" placeholder="Click the microphone to speak, or the AI icon to generate..."></textarea>
                         </div>
                     </div>
-                    
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            HTML Output
+
+                    <!-- Example 3 -->
+                    <div>
+                        <div class="demo-label">
+                            <span>3. Custom Modal Instance Configuration</span>
+                            <span class="badge bg-light text-secondary">Scoped Options</span>
                         </div>
-                        <div class="card-body">
-                            <p>Configure the textarea to return HTML content:</p>
-                            <pre><code class="language-html">&lt;textarea data-ai-generate data-ai-response="html" class="form-control" rows="5"&gt;&lt;/textarea&gt;</code></pre>
+                        <div class="demo-sandbox">
+                            <textarea id="custom-config-textarea" class="form-control" rows="3" placeholder="This instance uses customized title and labels..."></textarea>
                         </div>
                     </div>
                 </section>
-                
-                <!-- Options -->
-                <section id="options" class="mb-5">
-                    <h2 class="mb-4">Configuration Options</h2>
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-striped mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Option</th>
-                                            <th>Type</th>
-                                            <th>Default</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>apiEndpoint</code></td>
-                                            <td>String</td>
-                                            <td><code>'/api/ai/generate'</code></td>
-                                            <td>Endpoint for AI generation API</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>apiMethod</code></td>
-                                            <td>String</td>
-                                            <td><code>'POST'</code></td>
-                                            <td>HTTP method for API requests</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>defaultMaxTokens</code></td>
-                                            <td>Number</td>
-                                            <td><code>200</code></td>
-                                            <td>Default maximum length for generated content</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>defaultTemperature</code></td>
-                                            <td>Number</td>
-                                            <td><code>0.7</code></td>
-                                            <td>Default creativity level (0-1)</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>prefill.enabled</code></td>
-                                            <td>Boolean</td>
-                                            <td><code>true</code></td>
-                                            <td>Whether to prefill prompt with selected text</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>prefill.maxLength</code></td>
-                                            <td>Number</td>
-                                            <td><code>500</code></td>
-                                            <td>Maximum characters to include from selection</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>prefill.append</code></td>
-                                            <td>Boolean</td>
-                                            <td><code>false</code></td>
-                                            <td>Whether to append to existing prompt</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+
+                <!-- Configuration Options -->
+                <section id="options" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-table"></i> Configuration Options</h3>
+                    </div>
+
+                    <div class="api-table-wrapper table-responsive">
+                        <table class="table api-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Type</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>apiEndpoint</code></td>
+                                    <td>String</td>
+                                    <td><code>'/api/ai/generate'</code></td>
+                                    <td>The backend REST route that processes the prompt.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>apiMethod</code></td>
+                                    <td>String</td>
+                                    <td><code>'POST'</code></td>
+                                    <td>HTTP request method for the generation endpoint.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>apiHeaders</code></td>
+                                    <td>Object</td>
+                                    <td><code>{}</code></td>
+                                    <td>Optional headers (Authorization/Cookies stripped for safety).</td>
+                                </tr>
+                                <tr>
+                                    <td><code>defaultMaxTokens</code></td>
+                                    <td>Number</td>
+                                    <td><code>200</code></td>
+                                    <td>Default maximum length slider value.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>defaultTemperature</code></td>
+                                    <td>Number</td>
+                                    <td><code>0.7</code></td>
+                                    <td>Creativity level preset: 0.3 (Low), 0.7 (Med), 1.0 (High).</td>
+                                </tr>
+                                <tr>
+                                    <td><code>cooldownMs</code></td>
+                                    <td>Number</td>
+                                    <td><code>2000</code></td>
+                                    <td>Anti-spam rate limit preventing rapid duplicate requests.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>timeout</code></td>
+                                    <td>Number</td>
+                                    <td><code>60000</code></td>
+                                    <td>Max client wait time (ms) before triggering AbortController.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>closeOnOutsideClick</code></td>
+                                    <td>Boolean</td>
+                                    <td><code>false</code></td>
+                                    <td>Closes the generator modal when backdrop is clicked.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>prefill.enabled</code></td>
+                                    <td>Boolean</td>
+                                    <td><code>true</code></td>
+                                    <td>Automatically copy highlighted text into the prompt box.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </section>
-                
-                <!-- Examples -->
-                <section id="examples" class="mb-5">
-                    <h2 class="mb-4">Examples</h2>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            Basic Example
-                        </div>
-                        <div class="card-body">
-                            <div class="example-container">
-                                <textarea data-ai-generate="true" class="form-control demo-textarea" placeholder="Click the AI button to generate content..."></textarea>
-                            </div>
-                            <pre><code class="language-html">&lt;textarea data-ai-generate class="form-control" rows="5"&gt;&lt;/textarea&gt;</code></pre>
-                        </div>
+
+                <!-- JavaScript Methods -->
+                <section id="methods" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-terminal"></i> Public JavaScript Methods</h3>
                     </div>
-                    
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            With Voice Input
-                        </div>
-                        <div class="card-body">
-                            <div class="example-container">
-                                <textarea data-ai-generate="true" data-ai-voice="true" class="form-control demo-textarea" placeholder="Try the voice input feature..."></textarea>
-                            </div>
-                            <pre><code class="language-html">&lt;textarea data-ai-generate data-ai-voice="true" class="form-control" rows="5"&gt;&lt;/textarea&gt;</code></pre>
-                        </div>
+
+                    <div class="api-table-wrapper table-responsive">
+                        <table class="table api-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Scope</th>
+                                    <th>Parameters</th>
+                                    <th>Usage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>.aiDescriptionGenerator()</code></td>
+                                    <td><span class="badge-method js">jQuery</span></td>
+                                    <td><code>options? (Object)</code></td>
+                                    <td>Attaches AI capability and buttons to the selected textarea.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.aiDescriptionGenerator('destroy')</code></td>
+                                    <td><span class="badge-method js">jQuery</span></td>
+                                    <td><em>none</em></td>
+                                    <td>Detaches UI, unbinds events, and removes instance modals.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>AIGenerator.init()</code></td>
+                                    <td><span class="badge-method js">Global</span></td>
+                                    <td><code>options (Object)</code></td>
+                                    <td>Configures global defaults and binds document listeners.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>AIGenerator.detach()</code></td>
+                                    <td><span class="badge-method js">Global</span></td>
+                                    <td><code>target (Selector/jQuery)</code></td>
+                                    <td>Detaches AI from a specific textarea element.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>AIGenerator.destroy()</code></td>
+                                    <td><span class="badge-method js">Global</span></td>
+                                    <td><em>none</em></td>
+                                    <td>Kills all observers, active instances, and modals across page.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            Custom Configuration
+                </section>
+
+                <!-- Custom Events -->
+                <section id="events" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-bell"></i> Lifecycle Events</h3>
+                    </div>
+                    <p class="text-secondary small">
+                        Listen for lifecycle hooks fired directly on your native <code>&lt;textarea&gt;</code> element:
+                    </p>
+
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div></div>
+                            <span>Event Listener Example</span>
                         </div>
-                        <div class="card-body">
-                            <div class="example-container">
-                                <textarea id="custom-config-textarea" class="form-control demo-textarea" placeholder="This example has custom configuration..."></textarea>
-                            </div>
-                            <pre><code class="language-javascript">$('#custom-config-textarea').aiDescriptionGenerator({
-    i18n: {
-        title: 'Custom AI Assistant',
-        generate: 'Create'
-    },
-    styles: {
-        button: {
-            size: '40px',
-            iconSize: '20px'
-        }
-    }
+                        <pre><code class="language-javascript">// Triggered as soon as API response finishes
+$('textarea').on('aiContentGenerated', function(e, content) {
+    console.log('AI generated response:', content);
+});
+
+// Triggered when user clicks 'Insert' into the textarea
+$('textarea').on('aiContentInserted', function(e, text) {
+    console.log('Content inserted into field:', text);
 });</code></pre>
+                    </div>
+                </section>
+
+                <!-- Backend API Contract -->
+                <section id="api-spec" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-server"></i> Backend API Contract</h3>
+                        <span class="badge-method post">POST Endpoint</span>
+                    </div>
+
+                    <p class="text-secondary small">
+                        Your server (Laravel, Node, Python, etc.) must accept and respond with the following JSON schema:
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="code-window">
+                                <div class="code-header"><span>Incoming Request Payload</span></div>
+                                <pre><code class="language-json">{
+  "prompt": "Write a product description for eco shoes",
+  "maxLength": 200,
+  "responseFormat": "text", // or "html"
+  "temperature": 0.7
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="code-window">
+                                <div class="code-header"><span>Standard Success Response</span></div>
+                                <pre><code class="language-json">{
+  "status": "success",
+  "content": "Step lightly with our all-new eco sneakers...",
+  "tokens": 42
+}</code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
-                
-                <!-- Try It -->
-                <section id="try-it" class="mb-5">
-                    <h2 class="mb-4">Try It Yourself</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            Interactive Demo
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <textarea id="interactive-demo" class="form-control demo-textarea" placeholder="Type something or select text, then click the AI button..."></textarea>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button id="init-demo" class="btn btn-primary">
-                                    <i class="fas fa-magic me-2"></i> Initialize Plugin
-                                </button>
-                                <button id="destroy-demo" class="btn btn-outline-secondary">
-                                    <i class="fas fa-trash me-2"></i> Destroy Instance
-                                </button>
-                            </div>
-                        </div>
+
+                <!-- Interactive Sandbox / Playground -->
+                <section id="try-it" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-vial"></i> Live Dynamic Sandbox</h3>
+                        <span class="badge bg-primary text-white">Full Lifecycle</span>
+                    </div>
+
+                    <p class="text-secondary small">
+                        Test dynamic initialization and destruction in real-time. Notice how other textareas on the page remain completely untouched.
+                    </p>
+
+                    <div class="demo-sandbox mb-3">
+                        <textarea id="interactive-demo" class="form-control" rows="4" placeholder="Type notes here or click Initialize below..."></textarea>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button id="init-demo" class="btn btn-brand">
+                            <i class="fas fa-bolt me-1"></i> Initialize Plugin
+                        </button>
+                        <button id="destroy-demo" class="btn btn-outline-danger">
+                            <i class="fas fa-trash-alt me-1"></i> Destroy Instance
+                        </button>
                     </div>
                 </section>
-                
-                <!-- FAQ -->
-                <section id="faq" class="mb-5">
-                    <h2 class="mb-4">Frequently Asked Questions</h2>
+
+                <!-- FAQ Accordion -->
+                <section id="faq" class="doc-card">
+                    <div class="doc-card-header">
+                        <h3 class="doc-card-title"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+                    </div>
+
                     <div class="accordion" id="faqAccordion">
-                        <div class="accordion-item">
+                        <div class="accordion-item border-0 mb-2 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                    How do I customize the API endpoint?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Does this work inside existing Bootstrap modal dialogs?
                                 </button>
                             </h2>
-                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    You can set a custom API endpoint during initialization:
-                                    <pre><code class="language-javascript">AIGenerator.init({
-    apiEndpoint: '/your/custom/endpoint'
-});</code></pre>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-secondary small">
+                                    Yes! The plugin automatically detects when a textarea is hosted inside an active modal or <code>[role="dialog"]</code> and automatically repositions the generator overlay and adjusts the stacking z-index (<code>10600+</code>) to ensure it appears on top.
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+
+                        <div class="accordion-item border-0 mb-2 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                    Can I use this in a modal dialog?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    How is CSRF security handled?
                                 </button>
                             </h2>
                             <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Yes! The plugin automatically detects when it's used inside a modal and adjusts the z-index accordingly to appear above the parent modal.
+                                <div class="accordion-body text-secondary small">
+                                    The module scans for <code>&lt;meta name="csrf-token" content="..."&gt;</code> automatically and includes the <code>X-CSRF-TOKEN</code> header along with same-origin credentials.
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+
+                        <div class="accordion-item border-0 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                    How do I change the language?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Is Web Speech Recognition supported on all browsers?
                                 </button>
                             </h2>
                             <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    You can customize all text through the i18n configuration:
-                                    <pre><code class="language-javascript">AIGenerator.init({
-    i18n: {
-        title: 'Your Custom Title',
-        generate: 'Generate Content',
-        // ... other translations
-    }
-});</code></pre>
+                                <div class="accordion-body text-secondary small">
+                                    The SpeechRecognition API is supported in modern Chromium browsers (Chrome, Edge, Opera) and Safari. If a user is on an unsupported browser, an alert notification handles the fallback gracefully without throwing console errors.
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-light py-5 mt-5">
+    <footer class="footer-custom">
         <div class="container text-center">
-            <p class="text-muted mb-0">AI Description Generator Plugin &copy; 2023 | Version 4.0</p>
+            <div class="mb-2">
+                <img src="assets/ai-description.svg" alt="Logo" width="24" height="24" class="me-1" onerror="this.src='thumbnail.png'">
+                <strong class="text-dark">AI Description Generator</strong>
+            </div>
+            <p class="mb-0 text-muted small">&copy; 2026 Enterprise Edition. Built with modern web standards, strict CSP compliance, and zero dependencies beyond jQuery.</p>
         </div>
     </footer>
 
@@ -575,57 +925,42 @@ $(document).ready(function() {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script src="js/ai.description.generator.min.js"></script>
+    <script src="js/ai-description-generator.js"></script>
+
     <script>
-        // Initialize highlight.js
-        hljs.highlightAll();
-        
-        // Demo functionality
         $(document).ready(function() {
-            // Initialize the demo textareas
-            $('textarea[data-ai-generate]').aiDescriptionGenerator();
-            
-            // Initialize the custom config demo
+            // Code Highlighting
+            hljs.highlightAll();
+
+            // Initialize custom config demo
             $('#custom-config-textarea').aiDescriptionGenerator({
                 i18n: {
-                    title: 'Custom AI Assistant',
-                    generate: 'Create'
-                },
-                styles: {
-                    button: {
-                        size: '40px',
-                        iconSize: '20px'
-                    }
+                    title: 'Specialized Product Bot',
+                    generate: 'Draft Specs'
                 }
             });
-            
-            // Interactive demo controls
-            let demoInitialized = false;
-            
-            $('#init-demo').click(function() {
+
+            // Interactive sandbox state
+            var demoInitialized = false;
+
+            $('#init-demo').on('click', function() {
                 if (!demoInitialized) {
                     $('#interactive-demo').aiDescriptionGenerator({
                         i18n: {
-                            title: 'Interactive Demo',
-                            generate: 'Try It'
+                            title: 'Sandbox Generator',
+                            generate: 'Execute Prompt'
                         }
                     });
                     demoInitialized = true;
-                    $(this).html('<i class="fas fa-check me-2"></i> Initialized');
-                    $(this).addClass('btn-success').removeClass('btn-primary');
+                    $(this).html('<i class="fas fa-check me-1"></i> Running').removeClass('btn-brand').addClass('btn-success');
                 }
             });
-            
-            $('#destroy-demo').click(function() {
+
+            $('#destroy-demo').on('click', function() {
                 if (demoInitialized) {
-                    // This would need to be implemented in your plugin
-                    // For now, we'll just remove the button
-                    $('.ai-textarea-wrapper').removeClass('ai-textarea-wrapper');
-                    $('.ai-generate-btn, .ai-voice-btn').remove();
-                    $('#interactive-demo').css('padding-right', '');
+                    $('#interactive-demo').aiDescriptionGenerator('destroy');
                     demoInitialized = false;
-                    $('#init-demo').html('<i class="fas fa-magic me-2"></i> Initialize Plugin');
-                    $('#init-demo').addClass('btn-primary').removeClass('btn-success');
+                    $('#init-demo').html('<i class="fas fa-bolt me-1"></i> Initialize Plugin').removeClass('btn-success').addClass('btn-brand');
                 }
             });
         });
