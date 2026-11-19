@@ -14,10 +14,9 @@
     "LICENSE"
   ],
   "scripts": {
-    "build:js": "terser js/ai-description-generator.js -c -m -o js/ai.description.generator.min.js",
-    "build:css": "clean-css-cli -o css/ai.description.generator.min.css css/ai-description-generator.css",
-    "build": "npm run build:js && npm run build:css",
-    "prepublishOnly": "npm run build"
+    "build:js": "npx terser js/ai-description-generator.js -c -m -o js/ai.description.generator.min.js",
+    "build:css": "npx clean-css-cli -o css/ai.description.generator.min.css css/ai-description-generator.css",
+    "build": "npm run build:js && npm run build:css"
   },
   "keywords": [
     "jquery",
